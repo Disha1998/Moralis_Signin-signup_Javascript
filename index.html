@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moralis- signUp/signIn</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+  </head>
+  <body>
+    <input type="email" name="" id="email" placeholder="enter your email" />
+    <input
+      type="password"
+      name=""
+      id="password"
+      placeholder="enter your password"
+    />
+    <button id="signup" onclick="">Sign up</button>  <!-- signup using email & Password-->
+    <button id="loginEmail">Login with Email</button>  <!-- Login using email & Password-->
+
+    <button onclick="login()">Login with Metamask</button> 
+
+    <script>
+      Moralis.initialize("BDK7UVIxvV4XYXfEBzjaMLnHvDF2onQFyaW3q7og"); //Application ID
+      Moralis.serverURL = "https://mk4qbzvkiqam.usemoralis.com:2053/server"; //Server URL
+
+      async function login() {
+        console.log("login clicked....");
+        var Loginuser = await Moralis.Web3.authenticate(); //this basic one line for login with the metamask
+        if (Loginuser) {
+          console.log(Loginuser);
+        }
+      }
+
+      // sign-up
+
+      // signup = async (email, password) => {
+        async function signup(email, password){
+        const user = new Moralis.User();
+        user.set("username", email);
+        user.set("password", password);
+        user.set("email", email);
+        try {
+          await user.signUp();
+          console.log(user, "userrr");
+        } catch (error) {
+          alert("Error: " + error.code + " " + error.message);
+        }
+      };
+      // Login with Email
+
+      async function loginEmail(email, password){
+        try {
+          const user = await Moralis.User.logIn(email, password);
+          console.log(user, "userrr");
+        } catch (error) {
+          alert("Error: " + error.code + " " + error.message);
+        }
+      };
+
+
+      document.getElementById("signup").onclick = () =>
+        signup(
+          document.getElementById("email").value,
+          document.getElementById("password").value
+        );
+
+      document.getElementById("loginEmail").onclick = () =>
+        loginEmail(
+          document.getElementById("email").value,
+          document.getElementById("password").value
+        );
+    </script>
+  </body>
+</html>
